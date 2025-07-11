@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { UserRole } from "@/generated/prisma";
 import { z } from "zod";
 import { prisma } from "@/database/prisma";
+import { AppError } from "@/utils/AppError";
+import { hash } from "bcrypt";
 
 export class UsersController {
   create = async (req: Request, res: Response, next: NextFunction) => {
@@ -16,7 +18,27 @@ export class UsersController {
       });
 
       const { name, email, password, role } = bodySchema.parse(req.body);
-      res.json({ name, email, password, role });
+
+      const UserWithSameEmail = await prisma.user.findFirst({
+        where: { email },
+      });
+
+      if (UserWithSameEmail) {
+        throw new AppError("Usuário com email já registrado");
+      }
+
+      const hashedPassword = await hash(password, 8);
+
+      await prisma.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+          role,
+        },
+      });
+
+      res.json();
     } catch (error) {
       next(error);
     }
