@@ -39,4 +39,36 @@ export class RefundController {
       next(error);
     }
   };
+
+  index = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const perPage = parseInt(req.query.perPage as string) || 10;
+      const userId = req.user?.id;
+
+      const [refunds, total] = await Promise.all([
+        prisma.refund.findMany({
+          where: { userId },
+          skip: (page - 1) * perPage,
+          take: perPage,
+          orderBy: { createdAt: "desc" },
+        }),
+        prisma.refund.count({
+          where: { userId },
+        }),
+      ]);
+
+      const totalPages = Math.ceil(total / perPage);
+
+      res.json({
+        currentPage: page,
+        perPage,
+        totalPages,
+        totalItems: total,
+        data: refunds,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

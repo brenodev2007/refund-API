@@ -7,3 +7,4 @@ export const refundRoutes = Router();
 const refundController = new RefundController();
 
 refundRoutes.post("/create", refundController.create);
+refundRoutes.get("/", refundController.index);
