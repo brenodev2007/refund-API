@@ -4,6 +4,7 @@ import { errorHandling } from "./middlewares/errorHandling";
 
 const app = express();
 app.use(cors());
-app.use(express.json());
 app.use(errorHandling);
+app.use(express.json());
+
 export { app };
