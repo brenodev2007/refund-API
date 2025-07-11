@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { z } from "zod";
+import { includes, z } from "zod";
 import { prisma } from "@/database/prisma";
 
 const CategoriesEnum = z.enum([
@@ -70,5 +70,20 @@ export class RefundController {
     } catch (error) {
       next(error);
     }
+  };
+
+  show = async (req: Request, res: Response, next: NextFunction) => {
+    const paramsSchema = z.object({
+      id: z.string().uuid(),
+    });
+
+    const { id } = paramsSchema.parse(req.params);
+
+    const refund = await prisma.refund.findFirst({
+      where: { id },
+      includes: { user: true },
+    });
+
+    res.json(refund);
   };
 }
