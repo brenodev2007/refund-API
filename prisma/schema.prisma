@@ -8,3 +8,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole{
+  employee
+  manager
+}
+
+enum Category{
+  food
+  others
+  services
+  transport
+  accomodation
+}
+
+model User{
+  id String @id @default(uuid())
+  name String 
+  email String @unique
+  password String 
+
+
+  role UserRole @default(employee)
+
+  refunds Refund[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Refund{
+  id String @id @default(uuid())
+  name String 
+  amound Float
+  category Category @default(others)
+  filename String 
+
+
+  userId String @map("user_id")
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("refunds")
+}
