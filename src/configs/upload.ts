@@ -19,3 +19,11 @@ const MULTER = {
     },
   }),
 };
+
+export {
+  TMP_FOLDER,
+  UPLOADS_FOLDER,
+  MULTER,
+  MAX_FILE_SIZE,
+  ACCEPTED_IMAGE_TYPES,
+};

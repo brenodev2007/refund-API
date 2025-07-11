@@ -5,6 +5,7 @@ import { sessionRoutes } from "./session-routes";
 import { refundRoutes } from "./refund-routes";
 import { ensureAuthenticated } from "@/middlewares/ensure-Authenticated";
 import { verifyUserAuthorization } from "@/middlewares/verify-user-authorizaation";
+import { uploadsRouter } from "./upload-routes";
 
 export const routes = Router();
 
@@ -21,3 +22,5 @@ routes.use(
   verifyUserAuthorization,
   refundRoutes
 );
+
+routes.use("/upload", verifyUserAuthorization, uploadsRouter);
