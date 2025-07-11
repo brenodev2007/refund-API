@@ -2,8 +2,10 @@
   "name": "refund",
   "version": "1.0.0",
   "description": "API de solicitação de reembolso",
-  "main": "index.js",
-  "scripts": {},
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts"
+  },
   "author": "Breno Soriani",
   "license": "ISC",
   "dependencies": {
