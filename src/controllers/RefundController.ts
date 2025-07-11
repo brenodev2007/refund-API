@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { z } from "zod";
+import { prisma } from "@/database/prisma";
 
 const CategoriesEnum = z.enum([
   "food",
@@ -22,7 +23,18 @@ export class RefundController {
       });
 
       const { name, category, amount, filename } = bodySchema.parse(req.body);
-      res.json({ name, category, amount, filename });
+
+      const refund = await prisma.refund.create({
+        data: {
+          name,
+          category,
+          amount,
+          filename,
+          userId: req.user?.id,
+        },
+      });
+
+      res.json(refund);
     } catch (error) {
       next(error);
     }
